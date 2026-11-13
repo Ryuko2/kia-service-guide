@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Servicio Kia Optima — Guía DIY</title>
+<meta name="description" content="Guía paso a paso para hacer tú mismo el servicio completo (afinación mayor + inspección) de un Kia Optima SXL 2016 2.0 Turbo GDI.">
+<style>
+:root{
+  --bg:#0d1117; --bg2:#11161d; --panel:#161c25; --panel2:#1b222d;
+  --line:#2a323e; --line2:#37414f;
+  --txt:#e9eef4; --mut:#9aa7b5; --mut2:#6e7b8a;
+  --acc:#ffb020; --acc-ink:#1a1206;
+  --ok:#3fb968; --soon:#ffb020; --due:#f4536e; --info:#4da3ff;
+  --radius:14px; --radius-s:10px;
+  --tap:48px;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{line-height:1.2;margin:0}
+button{font:inherit;cursor:pointer}
+input,textarea{font:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 90px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(13,17,23,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.topbar-in{max-width:860px;margin:0 auto;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.brand{flex:1 1 auto;min-width:180px}
+.brand b{font-size:17px;letter-spacing:.2px}
+.brand span{display:block;font-size:12.5px;color:var(--mut)}
+.progressbox{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.pbar{width:104px;height:10px;background:var(--panel2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--acc);width:0%;transition:width .3s ease}
+.progressbox small{color:var(--mut);font-size:12.5px;white-space:nowrap}
+.btn{border:1px solid var(--line2);background:var(--panel2);color:var(--txt);
+  padding:10px 14px;border-radius:var(--radius-s);font-weight:600;min-height:44px}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn:active{transform:translateY(1px)}
+.navchips{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;max-width:860px;margin:0 auto;scrollbar-width:none}
+.navchips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--txt);
+  padding:8px 13px;border-radius:99px;font-size:14px;font-weight:600;min-height:40px}
+.chip:active{background:var(--panel2)}
+
+/* ---------- Sections ---------- */
+section{margin-top:22px;scroll-margin-top:130px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin:0 2px 10px}
+.sec-head h2{font-size:20px}
+.sec-head small{color:var(--mut)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card h3{font-size:16.5px;margin-bottom:6px}
+.note{color:var(--mut);font-size:14px}
+.mini{font-size:12.5px;color:var(--mut2)}
+
+/* ---------- Mileage ---------- */
+.kmrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.kmrow .field{flex:1 1 210px}
+label.flabel{display:block;font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+input[type=number],input[type=text],textarea{width:100%;background:var(--bg2);border:1px solid var(--line2);
+  color:var(--txt);border-radius:var(--radius-s);padding:12px 14px;min-height:var(--tap)}
+input[type=number]{font-size:22px;font-weight:700}
+.dueitem{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.dueitem:last-child{border-bottom:none;padding-bottom:2px}
+.dueitem .grow{flex:1}
+.dueitem b{font-size:15.5px}
+.dueitem p{margin:2px 0 0;font-size:13.5px;color:var(--mut)}
+.pill{flex:0 0 auto;font-size:12px;font-weight:800;letter-spacing:.3px;padding:5px 9px;border-radius:99px;border:1px solid}
+.pill.due{color:#ffb9c5;border-color:#6e2436;background:#2a1219}
+.pill.soon{color:#ffd88a;border-color:#6e5518;background:#2a2110}
+.pill.ok{color:#a9e8c0;border-color:#1f5132;background:#10231a}
+.pill.insp{color:#a9ccf5;border-color:#234a75;background:#101c2a}
+.flag{display:inline-block;font-size:11.5px;font-weight:800;color:#ffd88a;border:1px dashed #6e5518;
+  border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+
+/* ---------- Checklists ---------- */
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 2px;border-bottom:1px solid var(--line);cursor:pointer;min-height:var(--tap)}
+.check:last-child{border-bottom:none}
+.check input{appearance:none;flex:0 0 auto;width:26px;height:26px;margin:2px 0 0;border:2px solid var(--line2);
+  border-radius:8px;background:var(--bg2);position:relative;cursor:pointer}
+.check input:checked{background:var(--acc);border-color:var(--acc)}
+.check input:checked::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;
+  color:var(--acc-ink);font-weight:900;font-size:17px}
+.check .grow{flex:1}
+.check b{font-size:15.5px}
+.check p{margin:2px 0 0;font-size:13.5px;color:var(--mut)}
+.check .price{flex:0 0 auto;text-align:right;font-weight:800;font-size:15.5px}
+.check .price small{display:block;font-weight:600;color:var(--mut2);font-size:11.5px}
+.check.done b{color:var(--mut);text-decoration:line-through}
+.check.done p{color:var(--mut)!important}
+.totalrow{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px}
+.totalrow b{font-size:20px}
+.bundle{border:1px solid #6e5518;background:linear-gradient(180deg,#241c0d,#191407);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.bundle h3{color:#ffd88a}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.5px;background:var(--acc);color:var(--acc-ink);
+  border-radius:6px;padding:2px 8px;margin-bottom:8px}
+
+/* ---------- Steps ---------- */
+.proc{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);margin-bottom:12px;overflow:hidden}
+.proc>button.head{width:100%;display:flex;gap:10px;align-items:center;text-align:left;background:none;border:none;color:var(--txt);padding:15px 16px;min-height:56px}
+.proc .head .n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);
+  display:grid;place-items:center;font-weight:800;font-size:14px}
+.proc .head b{flex:1;font-size:16.5px}
+.proc .head .chev{color:var(--mut);transition:transform .2s}
+.proc.open .head .chev{transform:rotate(180deg)}
+.proc .body{display:none;padding:2px 16px 12px}
+.proc.open .body{display:block}
+.proc .pmeta{font-size:12.5px;color:var(--mut)}
+.spec{display:inline-block;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;
+  padding:2px 8px;font-size:13px;font-weight:700;margin:2px 4px 2px 0;white-space:nowrap}
+.warn{border:1px solid #6e2436;background:#2a1219;border-radius:var(--radius-s);padding:11px 13px;margin:10px 0;font-size:14px}
+.warn b{color:#ffb9c5}
+.caution{border:1px solid #6e5518;background:#2a2110;border-radius:var(--radius-s);padding:11px 13px;margin:10px 0;font-size:14px}
+.caution b{color:#ffd88a}
+.adv{border:1px dashed #234a75;background:#101c2a}
+.adv .head b{color:#a9ccf5}
+
+/* ---------- Inspection ---------- */
+.insp-item{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.insp-item:last-child{border-bottom:none}
+.insp-item .grow{flex:1 1 170px}
+.insp-item b{font-size:15.5px}
+.insp-item p{margin:1px 0 0;font-size:13px;color:var(--mut)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;flex:0 0 auto}
+.seg button{background:var(--bg2);color:var(--mut);border:none;padding:10px 12px;font-weight:700;font-size:13.5px;min-height:44px}
+.seg button[aria-pressed="true"]{color:#0d1117}
+.seg button[data-v="bueno"][aria-pressed="true"]{background:var(--ok)}
+.seg button[data-v="revisar"][aria-pressed="true"]{background:var(--soon)}
+.seg button[data-v="mal"][aria-pressed="true"]{background:var(--due)}
+
+/* ---------- Specs / records ---------- */
+.specgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.specitem{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-s);padding:12px 14px}
+.specitem small{display:block;color:var(--mut);font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
+.specitem b{font-size:16px}
+.specitem p{margin:3px 0 0;font-size:13px;color:var(--mut)}
+.rec{border:1px solid var(--line);border-radius:var(--radius-s);padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.rec .top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.rec b{font-size:15.5px}
+.rec ul{margin:6px 0 0;padding-left:18px;color:var(--mut);font-size:14px}
+.empty{border:1px dashed var(--line2);border-radius:var(--radius-s);padding:16px;text-align:center;color:var(--mut)}
+footer{margin-top:34px;color:var(--mut2);font-size:12.5px;text-align:center;line-height:1.7}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);background:var(--acc);color:var(--acc-ink);
+  font-weight:800;padding:12px 20px;border-radius:99px;box-shadow:var(--shadow);opacity:0;transition:.3s;z-index:99;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ---------- Ashe report form ---------- */
+select{width:100%;background:var(--bg2);border:1px solid var(--line2);color:var(--txt);
+  border-radius:var(--radius-s);padding:12px 14px;min-height:var(--tap)}
+.frow{display:grid;grid-template-columns:1fr;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+.frow:last-child{border-bottom:none}
+@media(min-width:560px){.frow{grid-template-columns:190px 1fr;align-items:center}}
+.frow .fname{font-weight:700;font-size:15px}
+.frow .fname small{display:block;color:var(--mut);font-weight:400;font-size:12.5px}
+.reptext{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius-s);
+  padding:13px 14px;font-size:14px;white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <b>🔧 Servicio Kia Optima — Guía DIY</b>
+      <span>Kia Optima SXL 2016 · 2.0 Turbo GDI (G4KH) · Automático 6 vel.</span>
+    </div>
+    <div class="progressbox">
+      <div class="pbar" aria-hidden="true"><i id="pbarFill"></i></div>
+      <small id="pbarTxt">0% del servicio</small>
+    </div>
+    <button class="btn primary" id="btnSaveTop">Guardar registro</button>
+  </div>
+  <nav class="navchips" aria-label="Secciones">
+    <button class="chip" data-go="s-km">📍 Kilometraje</button>
+    <button class="chip" data-go="s-comprar">🛒 Qué comprar</button>
+    <button class="chip" data-go="s-herramientas">🧰 Herramientas</button>
+    <button class="chip" data-go="s-pasos">📋 Paso a paso</button>
+    <button class="chip" data-go="s-inspeccion">🔍 Inspección</button>
+    <button class="chip" data-go="s-reporte">🩺 Reporte Ashe</button>
+    <button class="chip" data-go="s-specs">📐 Especificaciones</button>
+    <button class="chip" data-go="s-registro">🗂️ Registro</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ KILOMETRAJE ============ -->
+  <section id="s-km">
+    <div class="sec-head"><h2>📍 Kilometraje</h2><small>la guía se ajusta a tu odómetro</small></div>
+    <div class="card">
+      <div class="kmrow">
+        <div class="field">
+          <label class="flabel" for="kmInput">Kilometraje actual (km)</label>
+          <input type="number" id="kmInput" inputmode="numeric" min="0" step="100" placeholder="Ej. 85,000">
+        </div>
+      </div>
+      <p class="note" style="margin:10px 0 0">Escribe el kilometraje y la guía marca qué toca <b>ahora</b>, qué es solo <b>inspección</b> y para qué <b>falta</b>. Si ya guardaste un servicio, el cálculo usa tu último registro.</p>
+    </div>
+    <div class="card">
+      <h3>Estado del mantenimiento</h3>
+      <div id="dueList"></div>
+    </div>
+  </section>
+
+  <!-- ============ QUÉ COMPRAR ============ -->
+  <section id="s-comprar">
+    <div class="sec-head"><h2>🛒 Qué comprar</h2><small>marca lo que ya tienes</small></div>
+
+    <div class="bundle">
+      <span class="tag">MEJOR PRECIO · PAQUETE BUEN FIN — VENCE 21 NOV 2026</span>
+      <h3>Ruta paquete (recomendada)</h3>
+      <p class="note" style="color:#d8c491">Garrafa Mobil 1 5W-30 (4.73 L) + filtro de aceite STP MAX + filtro de aire, en paquete. Con esta ruta el paquete ya trae el filtro de aceite y el de aire: <b>no los compres por separado</b>.</p>
+      <div id="buyBundle"></div>
+    </div>
+
+    <div class="card">
+      <h3>Ruta por separado</h3>
+      <p class="note">Si no aprovechas el paquete, compra las piezas una por una. Los precios con etiqueta fueron verificados en tienda; el resto se confirma en mostrador.</p>
+      <div id="buyList"></div>
+      <div class="totalrow"><span class="note">Total de lo marcado (solo precios verificados)</span><b id="buyTotal">$0</b></div>
+      <p class="mini" id="buyTotalNote"></p>
+    </div>
+  </section>
+
+  <!-- ============ HERRAMIENTAS ============ -->
+  <section id="s-herramientas">
+    <div class="sec-head"><h2>🧰 Herramientas</h2><small>repásalas antes de empezar</small></div>
+    <div class="card">
+      <div class="warn"><b>⚠️ Seguridad primero:</b> NUNCA trabajes bajo el carro sostenido solo por el gato. Levanta con el gato y apoya el peso en <b>torres (bornería)</b> antes de meterte abajo. Freno de estacionamiento puesto y calzos en las ruedas que queden en el suelo.</div>
+      <div id="toolList"></div>
+    </div>
+  </section>
+
+  <!-- ============ PASO A PASO ============ -->
+  <section id="s-pasos">
+    <div class="sec-head"><h2>📋 Paso a paso</h2><small>afinación mayor + inspección, en orden</small></div>
+    <p class="note" style="margin:0 2px 12px">Toca cada procedimiento para desplegarlo y ve marcando los pasos conforme avanzas. El progreso se guarda solo en este dispositivo.</p>
+    <div id="procList"></div>
+  </section>
+
+  <!-- ============ INSPECCIÓN ============ -->
+  <section id="s-inspeccion">
+    <div class="sec-head"><h2>🔍 Inspección</h2><small>marca el estado de cada punto</small></div>
+    <div class="card"><div id="inspList"></div></div>
+  </section>
+
+  <!-- ============ REPORTE PARA ASHE ============ -->
+  <section id="s-reporte">
+    <div class="sec-head"><h2>🩺 Reporte para Ashe</h2><small>gestionada por Ashe, tu mecánica</small></div>
+    <div class="card">
+      <p class="note" style="margin-top:0">Llena lo que observaste en tu coche y guarda el reporte. Ashe lo procesa y te dice qué <b>cambiar</b>, qué <b>revisar</b> y qué está <b>bien</b>. El reporte queda en el historial (sección Registro) y puedes copiarlo para pegarlo donde quieras.</p>
+      <p class="note">Kilometraje del reporte: <b id="repKm" style="color:var(--txt)">—</b> <span class="mini">(se toma del campo de kilometraje, arriba)</span></p>
+
+      <h3 style="margin-top:14px">Niveles de fluidos que observaste</h3>
+      <div class="frow"><div class="fname">Aceite de motor<small>varilla, entre MIN y MAX</small></div>
+        <select id="rf-aceite"><option>Bien</option><option>Bajo</option><option>Sucio</option><option>No revisado</option></select></div>
+      <div class="frow"><div class="fname">Anticongelante<small>depósito, motor frío</small></div>
+        <select id="rf-coolant"><option>Bien</option><option>Bajo</option><option>Sucio</option><option>No revisado</option></select></div>
+      <div class="frow"><div class="fname">Líquido de frenos<small>depósito junto al booster</small></div>
+        <select id="rf-brake"><option>Bien</option><option>Bajo</option><option>Sucio</option><option>No revisado</option></select></div>
+      <div class="frow"><div class="fname">Limpiaparabrisas</div>
+        <select id="rf-washer"><option>Bien</option><option>Bajo</option><option>Sucio</option><option>No revisado</option></select></div>
+
+      <h3 style="margin-top:16px">Lo que se ve</h3>
+      <div class="frow"><div class="fname">Banda serpentina</div>
+        <select id="rv-banda"><option>Se ve bien</option><option>Con grietas</option><option>Brillosa o chilla</option><option>No la revisé</option></select></div>
+      <div class="frow"><div class="fname">Fugas visibles</div>
+        <select id="rv-fugas"><option>Ninguna visible</option><option>De aceite</option><option>De anticongelante</option><option>Hay manchas, no sé de qué</option><option>No revisé</option></select></div>
+      <div class="frow"><div class="fname">Desgaste de llantas</div>
+        <select id="rv-llantas"><option>Parejo</option><option>Más por dentro</option><option>Más por fuera</option><option>Más al centro</option><option>No revisado</option></select></div>
+
+      <h3 style="margin-top:16px">Testigos encendidos en el tablero</h3>
+      <div id="repLights"></div>
+
+      <div style="margin-top:16px">
+        <label class="flabel" for="rf-sonidos">Ruidos u olores extraños</label>
+        <textarea id="rf-sonidos" rows="2" placeholder="Ej. Chillido al arrancar en frío, olor a quemado tras manejar…"></textarea>
+      </div>
+      <div style="margin-top:12px">
+        <label class="flabel" for="rf-obd">Códigos OBD (si escaneaste el coche)</label>
+        <input type="text" id="rf-obd" placeholder="Ej. P0301, P0171…">
+      </div>
+
+      <h3 style="margin-top:16px">Fotos que tomaste</h3>
+      <p class="note" style="margin-top:0">Marca las que ya tienes. Las fotos como tal viajan por el chat, no por esta página — aquí solo queda el registro de cuáles tomaste.</p>
+      <div id="repPhotos"></div>
+
+      <div style="margin-top:14px">
+        <label class="flabel" for="rf-notas">¿Qué notas en tu coche?</label>
+        <textarea id="rf-notas" rows="3" placeholder="Cuéntale a Ashe con tus palabras: qué hace, desde cuándo, en qué momento…"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn primary" id="btnReport">Guardar reporte para Ashe</button>
+      </div>
+
+      <div id="repSummaryBox" class="hidden" style="margin-top:16px">
+        <label class="flabel">Resumen del reporte (listo para copiar)</label>
+        <div class="reptext" id="repSummary"></div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn" id="btnCopyReport">📋 Copiar reporte</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPECS ============ -->
+  <section id="s-specs">
+    <div class="sec-head"><h2>📐 Especificaciones</h2><small>las cifras de este carro, sin adivinar</small></div>
+    <div class="specgrid" id="specGrid"></div>
+    <p class="mini" style="margin-top:10px">Cifras verificadas contra el manual del propietario y manuales de servicio Kia / catálogo NGK (nov 2026). Donde las fuentes no coinciden, la guía muestra el rango y la bandera <span class="flag">CONFIRMA</span>: verifica contra tu manual o la calcomanía del carro antes de apretar o ajustar.</p>
+  </section>
+
+  <!-- ============ REGISTRO ============ -->
+  <section id="s-registro">
+    <div class="sec-head"><h2>🗂️ Registro de servicio</h2><small>queda guardado en este dispositivo</small></div>
+    <div class="card">
+      <label class="flabel" for="recNotes">Notas de este servicio (opcional)</label>
+      <textarea id="recNotes" rows="2" placeholder="Ej. Pastillas delanteras al 50%, próxima vez revisar banda…"></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn primary" id="btnSave">Guardar servicio de hoy</button>
+        <button class="btn" id="btnReset">Borrar marcas de trabajo</button>
+      </div>
+      <p class="note" style="margin:10px 0 0">Al guardar, se registran la fecha, el kilometraje y los procedimientos marcados como terminados. Nada sale de este dispositivo (sin cuenta, sin nube).</p>
+    </div>
+    <div class="card">
+      <h3>¿Qué sigue?</h3>
+      <div id="nextList"></div>
+    </div>
+    <div class="card">
+      <h3>Historial</h3>
+      <div id="recList"></div>
+    </div>
+    <div class="card">
+      <h3>🩺 Reportes para Ashe</h3>
+      <p class="note" style="margin-top:0">Los reportes que has guardado desde la sección «Reporte para Ashe».</p>
+      <div id="asheList"></div>
+    </div>
+  </section>
+
+  <footer>
+    Guía de trabajo para uso personal. Los torques y especificaciones se verificaron en dos o más fuentes (manual del propietario Kia Optima JF 2016, manuales de servicio Kia, catálogo NGK).<br>
+    Ante cualquier duda con un torque o una calibración, manda el manual del propietario y la calcomanía de la puerta del conductor.<br>
+    Precios: AutoZone Av. Manuel Ávila Camacho, Zapopan — verificados el 13 nov 2026; pueden cambiar.<br>
+    Guía gestionada por <b>Ashe</b>, tu mecánica.
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ================= DATA ================= */
+const VERIF = "AutoZone Ávila Camacho, Zapopan — verificado 13 nov 2026";
+const POR_CONFIRMAR = "precio por confirmar en tienda";
+
+const BUNDLE = [
+  {id:"b-paquete", name:"Paquete afinación Mobil 1: garrafa 5W-30 (4.73 L) + filtro de aceite STP MAX + filtro de aire", spec:"Buen Fin — con este paquete NO compres el filtro de aceite ni el de aire por separado", price:1649, priceNote:VERIF + " · vence 21 nov 2026"},
+  {id:"b-cuarto", name:"Mobil 1 5W-30 — cuarto suelto (946 ml)", spec:"Para completar los 4.8 L: la garrafa trae 4.73 L, el motor lleva 4.8 L con filtro", price:409, priceNote:VERIF}
+];
+const BUY = [
+  {id:"c-edge", name:"Garrafa Castrol EDGE 5W-30 sintético (4.73 L)", spec:"Pide SAE 5W-30, 100% sintético, sello API SP. No la versión «Euro Car»", price:1939, priceNote:VERIF},
+  {id:"c-edge-paq", name:"Paquete Castrol EDGE: garrafa + filtro STP MAX + filtro de aire", spec:"Alternativa al paquete Mobil 1", price:1899, priceNote:VERIF + " · vence 21 nov 2026"},
+  {id:"c-mobil1", name:"Garrafa Mobil 1 5W-30 sintético (4.73 L)", spec:"La misma garrafa del paquete, suelta", price:1929, priceNote:VERIF},
+  {id:"c-filtro-aceite", name:"Filtro de aceite STP SL4459", spec:"Equivalente del original Kia 26300-35505 · Solo si NO compraste paquete", price:139, priceNote:VERIF},
+  {id:"c-bujias", name:"Bujías NGK SILZKR8E9G (núm. 92422) × 4 — iridio", spec:"La bujía del 2.0 Turbo (equivale a la original Kia 18849-09085). NO uses la bujía del 2.4", price:null},
+  {id:"c-arandela", name:"Arandela del tapón de drenado (crush washer) × 1", spec:"De un solo uso: se cambia en CADA cambio de aceite", price:null},
+  {id:"c-filtro-aire", name:"Filtro de aire de motor", spec:"Solo si NO compraste paquete (el paquete ya lo incluye)", price:null},
+  {id:"c-filtro-cabina", name:"Filtro de cabina (aire acondicionado)", spec:"Detrás de la guantera", price:null},
+  {id:"c-dot4", name:"Líquido de frenos DOT-4 (1 L)", spec:"Para relleno o cambio. higroscópico: botella sellada, no reutilices sobrantes viejos", price:null},
+  {id:"c-anticong", name:"Anticongelante / refrigerante (base etilenglicol)", spec:"Para relleno del depósito. Nunca mezcles colores/tipos sin confirmar compatibilidad", price:null}
+];
+
+const TOOLS = [
+  {id:"t-torres", name:"Gato hidráulico + torres (bornería)", spec:"Las torres son innegociables: el gato solo NO sostiene el carro para trabajar abajo"},
+  {id:"t-calzos", name:"Calzos para ruedas + freno de estacionamiento", spec:""},
+  {id:"t-dados", name:"Juego de dados y matraca (métrica)", spec:"Claves: 10 mm (bobinas), 17 mm (tapón de drenado), 21 mm (tuercas de rueda)"},
+  {id:"t-torquimetro", name:"Torquímetro (llave de torque)", spec:"Rango útil aprox. 10–120 Nm: bujías, tapón de drenado y tuercas de rueda"},
+  {id:"t-bandeja", name:"Bandeja de drenado (mín. 6 L) + embudo", spec:""},
+  {id:"t-llave-filtro", name:"Llave para filtro de aceite", spec:"Tipo copa o de banda, para el filtro roscado"},
+  {id:"t-dado-bujia", name:"Dado para bujías 16 mm (5/8\") con extensión larga", spec:"De preferencia con goma/magneto interior para no soltar la bujía en el pozo"},
+  {id:"t-galga", name:"Galga de espesores (feeler gauge)", spec:"Para VERIFICAR la calibración de la bujía sin forzar la punta de iridio"},
+  {id:"t-medidor", name:"Medidor de presión de llantas + calibrador de pastillas (o regla/verner)", spec:""},
+  {id:"t-limpio", name:"Guantes, trapos, lámpara y limpiador de frenos (brake cleaner)", spec:"El limpiador de frenos SOLO en piezas de freno, nunca en el cuerpo de aceleración"},
+  {id:"t-basico", name:"Desarmadores, pinzas y llave ajustable", spec:"Para clips de la caja del filtro de aire, guantera y terminales"}
+];
+
+/* Procedures. item: id de seguimiento para el cálculo de vencimientos. */
+const PROCS = [
+ {id:"aceite", n:"A", title:"Aceite de motor y filtro", item:"aceite", meta:"Cada 8,000 km o 6 meses · uso severo: cada 5,000 km o 3 meses",
+  body:`<span class="spec">Aceite 5W-30 sintético API SP</span><span class="spec">4.8 L con filtro</span><span class="spec">Tapón drenado: 34.3–44.1 Nm</span><span class="spec">Filtro: 11.8–15.7 Nm</span>`,
+  steps:[
+   "Calienta el motor 2–3 minutos (el aceite tibio drena mejor) y apágalo. Carro en superficie plana.",
+   "Levanta el frente con el gato y apoya el carro en las TORRES. Freno de estacionamiento y calzos. Nunca trabajes con el carro solo en el gato.",
+   "Quita el tapón de llenado de aceite (arriba del motor): ayuda a que drene parejo.",
+   "Bandeja bajo el cárter. Afloja el tapón de drenado (dado 17 mm) y termina de desenroscarlo a mano. Deja drenar 10 minutos. El aceite caliente quema: guantes.",
+   "Cambia la arandela del tapón por una NUEVA y aprieta el tapón con torquímetro: 34.3–44.1 Nm. Sin torquímetro queda «firme», jamás a fuerza bruta: el cárter es de aluminio.",
+   "Quita el filtro viejo con la llave de filtro. Unta aceite nuevo en el empaque del filtro nuevo y enróscalo a mano hasta que asiente; termina a 11.8–15.7 Nm (o 3/4 de vuelta más tras el contacto).",
+   "Llena con 4.8 L de 5W-30 sintético API SP usando el embudo (garrafa 4.73 L + un chorro del cuarto suelto).",
+   "Pon el tapón de llenado. Arranca 30 segundos, apaga, espera 5 minutos y revisa la varilla: nivel entre MIN y MAX, más cerca de MAX. Revisa abajo que no haya fugas.",
+   "Lleva el aceite usado y el filtro viejo a reciclaje (muchas sucursales de AutoZone los reciben). No lo tires a la coladera."]},
+ {id:"filtro-aire", n:"B", title:"Filtro de aire de motor", item:"filtroAire", meta:"Inspeccionar cada servicio · reemplazar aprox. cada 36,000 km",
+  steps:[
+   "Motor apagado. Localiza la caja negra del filtro de aire junto al motor.",
+   "Suelta los clips (o tornillos) de la tapa y levántala con cuidado de no forzar la manguera de admisión.",
+   "Saca el filtro viejo. Si sale con polvo pero sin deformarse, aún sirve: la regla es «a contraluz, si no pasa luz, se cambia».",
+   "Limpia hojas y polvo del fondo de la caja con un trapo (nada de aire a presión hacia el motor).",
+   "Coloca el filtro nuevo en la misma orientación, cierra la tapa y asegura todos los clips."]},
+ {id:"filtro-cabina", n:"C", title:"Filtro de cabina", item:"filtroCabina", meta:"Reemplazar cada 24,000 km o 12 meses",
+  steps:[
+   "Abre la guantera y vacíala. Suelta los topes laterales para que baje por completo.",
+   "Detrás verás una tapa rectangular: aprieta sus pestañas y retírala.",
+   "Desliza el filtro viejo hacia afuera. Fíjate en la flecha de flujo de aire (AIR FLOW) antes de sacarlo.",
+   "Instala el nuevo con la flecha en la misma dirección (hacia abajo en este modelo), repon la tapa y sube la guantera."]},
+ {id:"bujias", n:"D", title:"Bujías", item:"bujias", meta:"Cada 72,000 km o 36 meses · NGK SILZKR8E9G (iridio)",
+  warn:`<div class="warn"><b>⚠️ PRECAUCIÓN — bujías de turbo:</b> trabaja SOLO con el motor completamente frío (mínimo 2–3 horas apagado). Aprieta con torquímetro: las roscas van en cabeza de aluminio y una rosca cruzada o un sobre-apriete sale carísimo.</div>
+  <div class="caution"><b>Calibración (gap):</b> las fuentes difieren — la bujía NGK viene pre-calibrada de fábrica aprox. 0.9 mm, mientras listados de servicio dan 0.7–0.8 mm. <span class="flag">CONFIRMA</span> Verifica con la galga SIN forzar ni doblar la punta fina de iridio; si tienes duda, déjala como viene de fábrica y confírmala contra tu manual antes de instalar.</div>
+  <span class="spec">Bujía NGK SILZKR8E9G ×4</span><span class="spec">Torque: 14.7–24.5 Nm (objetivo 15–20)</span><span class="spec">Gap: 0.7–0.9 mm ⚠ confirma</span><span class="spec">Dado 16 mm</span>`,
+  steps:[
+   "Motor FRÍO. Retira la cubierta plástica del motor (jala hacia arriba / tornillos según versión).",
+   "Desconecta el conector de cada bobina y quita su tornillo (10 mm). Saca las bobinas jalando recto hacia arriba, con giro suave.",
+   "Antes de sacar cada bujía, limpia/sopla el pozo: la mugre que caiga al cilindro es problema serio.",
+   "Saca las bujías con el dado de 16 mm y la extensión. Revisa las viejas: color café claro = sano; negras/aceitosas o con la punta comida = apúntalo para Ashe.",
+   "Verifica la calibración de las nuevas con la galga (sin forzar la punta de iridio).",
+   "Enrosca cada bujía nueva A MANO hasta que asiente. Solo entonces aprieta con torquímetro: 14.7–24.5 Nm (apunta a 15–20 Nm).",
+   "Reinstala bobinas, sus tornillos y conectores. Arranca y escucha: ralentí parejo, sin jalones ni testigo de check engine."]},
+ {id:"frenos", n:"E", title:"Inspección de frenos", item:"frenos", meta:"Inspeccionar cada servicio · líquido DOT-4",
+  body:`<span class="spec">Pastilla sana: ≥ 3 mm de material</span><span class="spec">Líquido: DOT-4</span>`,
+  steps:[
+   "Con el carro en torres y la rueda fuera (o con la rueda girada y buena luz), localiza las pastillas a través del cáliper.",
+   "Mide el material de fricción de cada pastilla: 3 mm o menos = toca cambiarlas. Compara lado izquierdo vs derecho: desgaste disparejo = cáliper o guías con problema.",
+   "Revisa los discos: surcos profundos que se sientan con la uña, óxido severo o coloración azul = apúntalo para Ashe; no es cambio casero obligatorio hoy.",
+   "Revisa el nivel del líquido de frenos (depósito junto al booster): entre MIN y MAX. Si está bajo Y las pastillas están gastadas, el nivel bajo es por el desgaste — no rellenes si vas a cambiar pastillas pronto (al regresar los pistones el nivel sube y se derrama).",
+   "Si el pedal se siente esponjoso o el líquido está muy oscuro (casi negro), regístralo en el Reporte para Ashe: el cambio de líquido completo es trabajo de dos personas o de taller."]},
+ {id:"fluidos", n:"F", title:"Fluidos: niveles y rellenos", item:"fluidos", meta:"Revisar cada servicio",
+  body:`<span class="spec">Anticongelante: etilenglicol</span><span class="spec">Frenos: DOT-4</span><span class="spec">Dirección: EPS eléctrica — sin fluido</span>`,
+  steps:[
+   "ANTICONGELANTE: con el motor FRÍO, revisa el depósito transparente: nivel entre MIN y MAX. Rellena con anticongelante compatible si hace falta.",
+   "⚠️ NUNCA quites el tapón del radiador/depósito presurizado con el motor caliente: el vapor y el líquido a presión queman.",
+   "LÍQUIDO DE FRENOS DOT-4: nivel entre MIN y MAX (ver también la sección de frenos).",
+   "DIRECCIÓN: este Optima trae dirección eléctrica (EPS/MDPS): NO tiene depósito ni fluido de dirección hidráulica. Si el volante se siente duro, es tema eléctrico — repórtalo a Ashe.",
+   "LIMPIAPARABRISAS: rellena el depósito. ACUÉRDATE: también revisa el nivel de aceite con la varilla ya con el motor asentado."]},
+ {id:"banda", n:"G", title:"Banda serpentina (accesorios)", item:"banda", meta:"Inspeccionar cada servicio — sin intervalo fijo de cambio",
+  steps:[
+   "Con el motor APAGADO y frío, ilumina la banda y gira tu vista por todo su recorrido.",
+   "Busca: grietas en las costillas, bordes deshilachados, zonas brillosas (patina) o pedazos faltantes.",
+   "Si chilla al arrancar o al girar el volante, o se ve agrietada, toca cambio. El cambio de banda es nivel medio (hay que liberar el tensor): si no lo has hecho, déjalo para taller y márcalo en el reporte.",
+   "Toma la foto de la banda para el Reporte para Ashe si ves algo raro."]},
+ {id:"pcv", n:"H", title:"Válvula PCV", item:"pcv", meta:"Revisar en afinación mayor",
+  steps:[
+   "Localiza la válvula PCV en la tapa de punterías (conectada a una manguera de vacío).",
+   "Desconecta la manguera y saca la válvula (roscada o a presión según versión).",
+   "Agítala: debe sonar un cascabeleo libre (la válvula interna se mueve). Si no suena, está pegada.",
+   "Pegada o muy sucia = se reemplaza: es pieza barata y una PCV tapada causa consumo de aceite y fugas. Confirma el número de parte en mostrador con tu modelo."]},
+ {id:"carbon", n:"I", title:"Cuerpo de aceleración y carbón GDI", item:"carbon", meta:"Solo inspección — no rociar a ciegas",
+  warn:`<div class="caution"><b>Nota GDI:</b> al ser inyección directa, la gasolina no lava las válvulas de admisión y con los años se acumula carbón. El diagnóstico real es con boroscopio (taller). <b>NO rocíes limpiador de cuerpo de aceleración a ciegas con el motor armado</b>: puedes dañar sensores y el catalizador.</div>`,
+  steps:[
+   "Observa síntomas: ralentí inestable, jalones al acelerar suave, consumo de gasolina mayor al normal.",
+   "Si NO hay síntomas: no toques nada. Márcalo como «sin síntomas» y sigue.",
+   "Si SÍ hay síntomas: anótalos con detalle en el Reporte para Ashe (qué hace, cuándo, desde cuándo). La limpieza de válvulas (walnut blasting) es trabajo de taller."]},
+ {id:"llantas-serv", n:"J", title:"Rotación de llantas y presión", item:"rotacion", meta:"Rotar cada ~12,000 km · con el servicio es buen momento",
+  body:`<span class="spec">Presión en frío: 34 psi (235 kPa) ⚠ confirma en la calcomanía de la puerta</span><span class="spec">Tuercas: 88–108 Nm en estrella</span>`,
+  steps:[
+   "Aprovecha que el carro está en torres. Patrón para tracción delantera: las delanteras pasan atrás del mismo lado; las traseras pasan adelante CRUZADAS (izquierda→derecha y viceversa).",
+   "Antes de bajar cada rueda, asienta las tuercas a mano; ya con el carro abajo aprieta con torquímetro en patrón de ESTRELLA: 88–108 Nm.",
+   "Calibra las 4 llantas EN FRÍO a 34 psi (235 kPa) — y confirma contra la calcomanía de la puerta del conductor, que es la que manda para TU carro y TU medida.",
+   "Re-aprieta las tuercas tras rodar aprox. 80 km. Apunta la fecha: es el paso que todos olvidan."]},
+ {id:"bateria", n:"K", title:"Batería y terminales", item:"bateria", meta:"Revisar cada servicio",
+  steps:[
+   "Terminales sin sulfato (polvo blanco/verdoso). Si hay, limpia con cepillo y agua con bicarbonato, con la batería desconectada (primero el negativo).",
+   "Terminales firmes: no deben girar a mano. Base bien sujeta (una batería suelta se daña con la vibración).",
+   "Si la batería tiene más de 3–4 años o el arranque se siente flojo, pide la prueba de carga: en muchas sucursales de AutoZone la hacen gratis en mostrador."]},
+ {id:"transmision", n:"L", title:"Transmisión automática — inspeccionar y decidir", item:"atf", meta:"Unidad sellada · SOLO decisión, no es paso casual",
+  warn:`<div class="warn"><b>🛑 AVANZADO / OPCIONAL — léelo completo antes de tocar nada:</b> esta caja (6 velocidades) es unidad sellada, sin varilla. Kia NO pide servicio del ATF en uso normal. En uso severo el manual pide cambiarlo cada 96,000 km. El drenado y relleno con <b>ATF SP-IV</b> exige controlar el nivel por temperatura con equipo de diagnóstico: un nivel mal puesto daña la caja. La recomendación honesta: que lo haga un taller con experiencia en Kia/Hyundai. Tu trabajo aquí es solo inspeccionar y decidir.</div>`,
+  steps:[
+   "Con el carro en torres, inspecciona visualmente la carcasa de la transmisión: manchas frescas de aceite rojizo = fuga, repórtala.",
+   "Piensa en el historial: ¿el coche se usa en tráfico pesado, subidas o con calor extremo seguido? (uso severo) ¿Ya pasó de 96,000 km sin cambio de ATF conocido?",
+   "Decide: si aplica uso severo + kilometraje, agenda el drenado y relleno con ATF SP-IV en taller. Si no, no toques la caja: «sin servicio» es lo que manda el manual en uso normal."]}
+];
+
+const INSP = [
+  {id:"i-fuga-aceite", name:"Fugas de aceite bajo el motor", spec:"Manchas frescas en cárter, filtro o suelo"},
+  {id:"i-fuga-cool", name:"Fugas de anticongelante", spec:"Manchas verdes/rosas, costras en mangueras y conexiones"},
+  {id:"i-mangueras", name:"Mangueras", spec:"Hinchadas, resecas, agrietadas o abrazaderas flojas"},
+  {id:"i-banda", name:"Banda serpentina", spec:"Grietas, brillo (patina), deshilachado"},
+  {id:"i-pastillas", name:"Pastillas de freno", spec:"Mínimo ~3 mm de material, desgaste parejo por lado"},
+  {id:"i-discos", name:"Discos de freno", spec:"Sin surcos profundos ni óxido severo"},
+  {id:"i-llantas", name:"Desgaste de llantas", spec:"Parejo; profundidad de dibujo sobre el testigo de desgaste"},
+  {id:"i-luces", name:"Luces", spec:"Bajas, altas, cuartos, freno (con ayuda), reversa e intermitentes"},
+  {id:"i-plumas", name:"Limpiaparabrisas", spec:"Sin rayar ni saltar; escobillas sin grietas"},
+  {id:"i-amort", name:"Amortiguadores", spec:"Sin fugas visibles; el carro no debe rebotar más de una vez al empujar una esquina"}
+];
+
+/* Trackable service items for due calculations. intervalKm null = every service (inspection).
+   firstInterval (optional): km threshold for the FIRST change, used while no record exists;
+   once a record exists, interval applies as the repeat interval. */
+const ITEMS = [
+  {id:"aceite", name:"Aceite de motor y filtro", interval:8000, unit:"cada 8,000 km o 6 meses",
+   note:"Sintético 5W-30 API SP. Uso severo (tráfico, ciudad, turbo): cada 5,000 km o 3 meses."},
+  {id:"bujias", name:"Bujías", interval:72000, unit:"cada 72,000 km o 36 meses",
+   note:"NGK SILZKR8E9G de iridio, específicas del 2.0 Turbo."},
+  {id:"filtroAire", name:"Filtro de aire de motor", interval:36000, unit:"inspección cada servicio · cambio aprox. cada 36,000 km",
+   note:"Si el elemento se ve sucio a contraluz, se cambia antes."},
+  {id:"filtroCabina", name:"Filtro de cabina", interval:24000, unit:"cada 24,000 km o 12 meses", note:""},
+  {id:"rotacion", name:"Rotación de llantas", interval:12000, unit:"cada ~12,000 km",
+   note:"Aprovecha cualquier levantada del carro."},
+  {id:"coolant", name:"Anticongelante (cambio)", interval:48000, firstInterval:96000, unit:"1ª vez a los 96,000 km o 60 meses; después cada 48,000 km o 24 meses",
+   note:"El nivel se revisa en cada servicio (sección de fluidos)."},
+  {id:"frenosLiq", name:"Líquido de frenos (cambio)", interval:48000, unit:"inspección cada servicio · cambio aprox. cada 48,000 km",
+   note:"⚠ Los manuales Kia varían según mercado (48,000–80,000 km / 36–48 meses). El líquido absorbe humedad: si lleva más de 2 años, cámbialo y confírmalo en tu manual.", flag:true},
+  {id:"atf", name:"ATF de transmisión (solo uso severo)", interval:96000, unit:"uso normal: sin servicio · uso severo: cada 96,000 km",
+   note:"Unidad sellada. Drenado y relleno con SP-IV = trabajo de taller. Ver procedimiento L."},
+  {id:"inspGral", name:"Inspección general", interval:null, unit:"en cada servicio",
+   note:"Frenos, banda, mangueras, fugas, llantas, luces, batería y PCV: se inspeccionan siempre."}
+];
+const ITEM_BY_ID = {}; ITEMS.forEach(i=>ITEM_BY_ID[i.id]=i);
+/* Procedures that map to a trackable item id used in records */
+const PROC_ITEM = {}; PROCS.forEach(p=>{ if(p.item) PROC_ITEM[p.id]=p.item; });
+
+const SPECS = [
+  {k:"Aceite de motor", v:"5W-30 100% sintético · API SP", p:"Capacidad: 4.8 L con cambio de filtro"},
+  {k:"Filtro de aceite", v:"Kia OEM 26300-35505", p:"Equivalente AutoZone: STP SL4459 ($139 verificado). Apriete: 11.8–15.7 Nm"},
+  {k:"Tapón de drenado", v:"34.3–44.1 Nm", p:"Con arandela NUEVA en cada cambio (25.3–32.5 lb-ft)"},
+  {k:"Bujías", v:"NGK SILZKR8E9G (92422) ×4", p:"Equivale a la original Kia 18849-09085 · iridio · solo motor 2.0 Turbo"},
+  {k:"Bujías — torque", v:"14.7–24.5 Nm", p:"Objetivo práctico 15–20 Nm · motor frío · enroscar a mano primero"},
+  {k:"Bujías — calibración (gap)", v:"0.7–0.9 mm", p:"Las fuentes difieren (de fábrica ~0.9 mm; listados de servicio 0.7–0.8 mm). Verifica con galga sin forzar la punta de iridio.", flag:true},
+  {k:"Tuercas de rueda", v:"88–108 Nm (65–80 lb-ft)", p:"En estrella, con torquímetro. Re-apriete tras ~80 km"},
+  {k:"Presión de llantas", v:"34 psi (235 kPa) en frío", p:"Valor de la tabla del manual para las medidas de fábrica. La calcomanía de la puerta del conductor manda.", flag:true},
+  {k:"Líquido de frenos", v:"DOT-4", p:"Nivel entre MIN y MAX. Cambio aprox. cada 48,000 km (los manuales varían).", flag:true},
+  {k:"Anticongelante", v:"Etilenglicol (calidad Kia)", p:"1er cambio: 96,000 km o 60 meses; después cada 48,000 km o 24 meses"},
+  {k:"Transmisión", v:"Automática 6 vel. · ATF SP-IV", p:"Sellada, sin varilla. Uso normal: sin servicio. Uso severo: cada 96,000 km (taller)"},
+  {k:"Dirección", v:"EPS eléctrica (MDPS)", p:"Sin fluido de dirección hidráulica: no hay nada que rellenar"}
+];
+
+const REP_LIGHTS = ["Check engine","Presión de aceite","Batería / carga","Frenos","ABS","TPMS (llantas)","Temperatura","Airbag","Ninguno"];
+const REP_PHOTOS = ["Banda serpentina","Pastillas de freno","Bujías","Bahía del motor","Llantas"];
+
+/* ================= STATE ================= */
+const LS_KEY = "kiaOptimaSvc.v1";
+let S = {km:"", buy:{}, tools:{}, steps:{}, insp:{}, records:[], reports:[]};
+try{ const raw = localStorage.getItem(LS_KEY); if(raw){ const p = JSON.parse(raw); if(p && typeof p==="object") S = Object.assign(S,p); } }catch(e){}
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+const $ = s=>document.querySelector(s);
+const fmt$ = n=>"$"+n.toLocaleString("es-MX");
+const fmtKm = n=>Number(n).toLocaleString("es-MX")+" km";
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2600); }
+
+/* ================= RENDER: checklists ================= */
+function checkRow(group, it, extra){
+  const checked = S[group][it.id] ? " checked" : "";
+  const done = S[group][it.id] ? " done" : "";
+  const price = (it.price!=null)
+    ? `<div class="price">${fmt$(it.price)}<small>verificado</small></div>`
+    : (extra==="buy" ? `<div class="price" style="font-size:12px;color:var(--mut2);font-weight:600;max-width:110px">precio por confirmar en tienda</div>` : "");
+  return `<label class="check${done}"><input type="checkbox" data-group="${group}" data-id="${it.id}"${checked}>
+    <span class="grow"><b>${it.name}</b>${it.spec?`<p>${it.spec}</p>`:""}${it.priceNote?`<p class="mini">${it.priceNote}</p>`:""}</span>${price}</label>`;
+}
+function renderBuy(){
+  $("#buyBundle").innerHTML = BUNDLE.map(it=>checkRow("buy",it,"buy")).join("");
+  $("#buyList").innerHTML = BUY.map(it=>checkRow("buy",it,"buy")).join("");
+  let total=0, any=false;
+  BUNDLE.concat(BUY).forEach(it=>{ if(S.buy[it.id] && it.price!=null){ total+=it.price; any=true; } });
+  $("#buyTotal").textContent = fmt$(total);
+  $("#buyTotalNote").textContent = any
+    ? "Suma solo de artículos marcados con precio verificado ("+VERIF+"). Lo demás: "+POR_CONFIRMAR+"."
+    : "Marca artículos para sumar los que tienen precio verificado. Lo demás: "+POR_CONFIRMAR+".";
+}
+function renderTools(){ $("#toolList").innerHTML = TOOLS.map(it=>checkRow("tools",it)).join(""); }
+
+/* ================= RENDER: procedures ================= */
+const openProcs = new Set();
+function renderProcs(){
+  $("#procList").innerHTML = PROCS.map(p=>{
+    const stepsHtml = p.steps.map((s,i)=>{
+      const sid = p.id+"-"+i, checked = S.steps[sid]?" checked":"", done = S.steps[sid]?" done":"";
+      return `<label class="check${done}"><input type="checkbox" data-group="steps" data-id="${sid}"${checked}>
+        <span class="grow"><p style="margin:0;font-size:15px;color:var(--txt)">${s}</p></span></label>`;
+    }).join("");
+    const doneCount = p.steps.filter((_,i)=>S.steps[p.id+"-"+i]).length;
+    const isOpen = openProcs.has(p.id);
+    return `<div class="proc${isOpen?" open":""}" id="proc-${p.id}">
+      <button class="head" type="button" aria-expanded="${isOpen?"true":"false"}">
+        <span class="n">${p.n}</span><b>${p.title}</b>
+        <span class="pmeta">${doneCount}/${p.steps.length}</span><span class="chev">▾</span>
+      </button>
+      <div class="body">
+        <p class="pmeta" style="margin:2px 0 8px">${p.meta||""}</p>
+        ${p.warn||""}${p.body||""}
+        ${stepsHtml}
+      </div></div>`;
+  }).join("");
+  document.querySelectorAll(".proc > .head").forEach(h=>{
+    h.addEventListener("click", ()=>{
+      const proc = h.parentElement, pid = proc.id.replace("proc-","");
+      if(openProcs.has(pid)) openProcs.delete(pid); else openProcs.add(pid);
+      const open = openProcs.has(pid);
+      proc.classList.toggle("open", open);
+      h.setAttribute("aria-expanded", open?"true":"false");
+    });
+  });
+}
+function progress(){
+  const totalSteps = PROCS.reduce((a,p)=>a+p.steps.length,0);
+  const doneSteps = PROCS.reduce((a,p)=>a+p.steps.filter((_,i)=>S.steps[p.id+"-"+i]).length,0);
+  const pct = totalSteps? Math.round(doneSteps/totalSteps*100):0;
+  $("#pbarFill").style.width = pct+"%";
+  $("#pbarTxt").textContent = pct+"% del servicio";
+  return {totalSteps, doneSteps};
+}
+
+/* ================= RENDER: inspection ================= */
+function renderInsp(){
+  $("#inspList").innerHTML = INSP.map(it=>{
+    const v = S.insp[it.id]||"";
+    const btn = (val,label)=>`<button type="button" data-insp="${it.id}" data-v="${val}" aria-pressed="${v===val}">${label}</button>`;
+    return `<div class="insp-item"><div class="grow"><b>${it.name}</b><p>${it.spec}</p></div>
+      <div class="seg" role="group" aria-label="${it.name}">${btn("bueno","Bueno")}${btn("revisar","Revisar")}${btn("mal","Mal")}</div></div>`;
+  }).join("");
+  document.querySelectorAll("[data-insp]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const id=b.dataset.insp, val=b.dataset.v;
+      S.insp[id] = (S.insp[id]===val) ? "" : val;
+      save(); renderInsp();
+    });
+  });
+}
+
+/* ================= RENDER: specs ================= */
+function renderSpecs(){
+  $("#specGrid").innerHTML = SPECS.map(s=>`<div class="specitem"><small>${s.k}</small><b>${s.v}</b>${s.flag?`<span class="flag">CONFIRMA</span>`:""}<p>${s.p}</p></div>`).join("");
+}
+
+/* ================= DUE ENGINE ================= */
+function lastDoneKm(){
+  const map = {};
+  (S.records||[]).forEach(r=>{
+    (r.items||[]).forEach(itId=>{
+      if(map[itId]==null || r.km > map[itId]) map[itId]=r.km;
+    });
+  });
+  return map;
+}
+function dueStatus(item, km, lastMap){
+  if(item.interval==null) return {cls:"insp", label:"INSPECCIÓN", txt:"Se revisa en cada servicio."};
+  const last = lastMap[item.id];
+  if(last!=null){
+    const next = last + item.interval;
+    if(km >= next) return {cls:"due", label:"TOCA AHORA", txt:`Hecho a los ${fmtKm(last)} · vencía a los ${fmtKm(next)}.`};
+    if(km >= next - item.interval*0.15) return {cls:"soon", label:"YA CASI", txt:`Hecho a los ${fmtKm(last)} · siguiente a los ${fmtKm(next)}.`};
+    return {cls:"ok", label:"AL CORRIENTE", txt:`Hecho a los ${fmtKm(last)} · siguiente a los ${fmtKm(next)}.`};
+  }
+  const firstAt = item.firstInterval!=null? item.firstInterval : item.interval;
+  if(km!=="" && km!=null && Number(km) >= firstAt)
+    return {cls:"due", label:"TOCA AHORA", txt:`Sin registro previo y ya supera el intervalo (${item.unit}).`};
+  return {cls:"ok", label:"AÚN NO", txt:`Sin registro previo · intervalo: ${item.unit}.`};
+}
+function renderDue(){
+  const km = S.km===""? null : Number(S.km);
+  const lastMap = lastDoneKm();
+  $("#dueList").innerHTML = ITEMS.map(it=>{
+    const st = dueStatus(it, km, lastMap);
+    return `<div class="dueitem"><div class="grow"><b>${it.name}</b>${it.flag?`<span class="flag">CONFIRMA</span>`:""}
+      <p>${it.unit}${it.note? " — "+it.note : ""}</p><p>${km==null? "Escribe tu kilometraje para ver el estado." : st.txt}</p></div>
+      <span class="pill ${st.cls}">${km==null? "—" : st.label}</span></div>`;
+  }).join("");
+  $("#repKm").textContent = km==null? "—" : fmtKm(km);
+}
+function renderNext(){
+  const km = S.km===""? null : Number(S.km);
+  const lastMap = lastDoneKm();
+  const withDates = ITEMS.filter(i=>i.interval!=null && lastMap[i.id]!=null)
+    .map(i=>({name:i.name, next:lastMap[i.id]+i.interval}))
+    .sort((a,b)=>a.next-b.next);
+  if(!withDates.length){
+    $("#nextList").innerHTML = `<div class="empty">Todavía no hay servicios guardados.<br>Cuando guardes el primero, aquí verás qué sigue y a qué kilometraje.</div>`;
+    return;
+  }
+  $("#nextList").innerHTML = withDates.map(x=>`<div class="dueitem"><div class="grow"><b>${x.name}</b>
+    <p>Siguiente a los ${fmtKm(x.next)}${km!=null? (x.next>km? ` — faltan ${fmtKm(x.next-km).replace(" km","")} km` : " — YA TOCA") : ""}</p></div></div>`).join("");
+}
+
+/* ================= RECORDS ================= */
+/* User text is rendered as TEXT, never raw HTML (same rule renderAsheList applies). */
+function escHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function renderRecords(){
+  const list = S.records||[];
+  if(!list.length){
+    $("#recList").innerHTML = `<div class="empty">Sin registros todavía. Marca los pasos terminados, pon tus notas y toca «Guardar servicio de hoy».</div>`;
+  } else {
+    $("#recList").innerHTML = list.slice().reverse().map(r=>`<div class="rec">
+      <div class="top"><b>${r.fechaTxt}</b><span class="pill insp">${fmtKm(r.km)}</span></div>
+      ${r.items && r.items.length? `<ul>${r.items.map(id=>`<li>${(ITEM_BY_ID[id]||{}).name||id}</li>`).join("")}</ul>` : `<ul><li>Sin procedimientos marcados</li></ul>`}
+      ${r.notes? `<p class="note" style="margin:6px 0 0">📝 ${escHtml(r.notes)}</p>`:""}
+    </div>`).join("");
+  }
+  renderAsheList();
+}
+function saveRecord(){
+  const km = Number(S.km);
+  if(!km){ toast("Primero escribe el kilometraje actual 📍"); document.getElementById("s-km").scrollIntoView({behavior:"smooth"}); return; }
+  const doneItems = [];
+  PROCS.forEach(p=>{
+    const all = p.steps.every((_,i)=>S.steps[p.id+"-"+i]);
+    if(all && PROC_ITEM[p.id] && !doneItems.includes(PROC_ITEM[p.id])) doneItems.push(PROC_ITEM[p.id]);
+  });
+  // La inspección general se registra si la sección de inspección tiene estados marcados
+  if(Object.keys(S.insp).some(k=>S.insp[k])) { if(!doneItems.includes("inspGral")) doneItems.push("inspGral"); }
+  const now = new Date();
+  const rec = { schemaVersion:"1.0", fechaISO: now.toISOString(),
+    fechaTxt: now.toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"}),
+    km: km, items: doneItems, notes: $("#recNotes").value.trim() };
+  S.records.push(rec); save();
+  $("#recNotes").value="";
+  renderRecords(); renderDue(); renderNext();
+  toast("✅ Servicio guardado: "+doneItems.length+" partida(s) a los "+fmtKm(km));
+}
+
+/* ================= ASHE REPORT ================= */
+function val(id){ return document.getElementById(id).value; }
+function checkedTexts(containerId){
+  return Array.from(document.querySelectorAll("#"+containerId+" input[type=checkbox]:checked")).map(i=>i.dataset.label);
+}
+function renderRepChecks(){
+  $("#repLights").innerHTML = REP_LIGHTS.map((t,i)=>`<label class="check"><input type="checkbox" data-rep="lights" data-label="${t}">
+    <span class="grow"><b style="font-size:15px">${t}</b></span></label>`).join("");
+  $("#repPhotos").innerHTML = REP_PHOTOS.map(t=>`<label class="check"><input type="checkbox" data-rep="photos" data-label="${t}">
+    <span class="grow"><b style="font-size:15px">Foto: ${t.toLowerCase()}</b></span></label>`).join("");
+}
+function buildReport(){
+  const now = new Date();
+  return {
+    schemaVersion: "1.0",
+    tipo: "reporte-ashe",
+    vehiculo: { marca:"Kia", modelo:"Optima SXL", anio:2016, motor:"2.0 Turbo GDI (G4KH)", transmision:"Automática 6 vel." },
+    fechaISO: now.toISOString(),
+    fechaTxt: now.toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"}),
+    km: S.km===""? null : Number(S.km),
+    fluidos: { aceite: val("rf-aceite"), anticongelante: val("rf-coolant"),
+               liquidoFrenos: val("rf-brake"), limpiaparabrisas: val("rf-washer") },
+    visto: { banda: val("rv-banda"), fugas: val("rv-fugas"), desgasteLlantas: val("rv-llantas") },
+    testigos: checkedTexts("repLights"),
+    sonidosOlores: val("rf-sonidos").trim(),
+    codigosOBD: val("rf-obd").trim(),
+    fotos: checkedTexts("repPhotos"),
+    notas: val("rf-notas").trim()
+  };
+}
+function reportText(r){
+  const L = [];
+  L.push("REPORTE PARA ASHE — Kia Optima SXL 2016 · 2.0 Turbo GDI");
+  L.push("Fecha: "+r.fechaTxt+" · Kilometraje: "+(r.km==null? "no indicado" : fmtKm(r.km)));
+  L.push("— Fluidos observados: Aceite: "+r.fluidos.aceite+" · Anticongelante: "+r.fluidos.anticongelante+
+         " · Líq. de frenos: "+r.fluidos.liquidoFrenos+" · Limpiaparabrisas: "+r.fluidos.limpiaparabrisas);
+  L.push("— Lo que se ve: Banda: "+r.visto.banda+" · Fugas: "+r.visto.fugas+" · Desgaste de llantas: "+r.visto.desgasteLlantas);
+  L.push("— Testigos encendidos: "+(r.testigos.length? r.testigos.join(", ") : "ninguno marcado"));
+  L.push("— Ruidos/olores: "+(r.sonidosOlores|| "—"));
+  L.push("— Códigos OBD: "+(r.codigosOBD|| "—"));
+  L.push("— Fotos tomadas: "+(r.fotos.length? r.fotos.join(", ")+" (viajan por el chat)" : "ninguna"));
+  L.push("— Qué noto en mi coche: "+(r.notas|| "—"));
+  return L.join("\n");
+}
+let lastReportText = "";
+function saveReport(){
+  const r = buildReport();
+  S.reports.push(r); save();
+  lastReportText = reportText(r);
+  $("#repSummary").textContent = lastReportText;
+  $("#repSummaryBox").classList.remove("hidden");
+  renderAsheList();
+  toast("🩺 Reporte guardado para Ashe");
+  $("#repSummaryBox").scrollIntoView({behavior:"smooth", block:"center"});
+}
+function copyText(txt, okMsg){
+  const done = ()=>toast(okMsg);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt, done));
+  } else fallbackCopy(txt, done);
+}
+function fallbackCopy(txt, done){
+  const ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); done(); }catch(e){ toast("No se pudo copiar — selecciona el texto manualmente"); }
+  document.body.removeChild(ta);
+}
+function renderAsheList(){
+  const list = S.reports||[];
+  if(!list.length){
+    $("#asheList").innerHTML = `<div class="empty">Sin reportes todavía. Llena el formulario de la sección «Reporte para Ashe» y guarda el primero.</div>`;
+    return;
+  }
+  $("#asheList").innerHTML = list.slice().reverse().map((r,revIdx)=>{
+    const idx = list.length-1-revIdx;
+    return `<div class="rec">
+      <div class="top"><b>${r.fechaTxt}</b><span class="pill insp">${r.km==null? "sin km" : fmtKm(r.km)}</span></div>
+      <p class="note" style="margin:6px 0">Testigos: ${(r.testigos&&r.testigos.length)? r.testigos.join(", ") : "ninguno"} · Fotos: ${(r.fotos&&r.fotos.length)? r.fotos.length : 0}</p>
+      <div class="reptext">${reportText(r).replace(/</g,"&lt;")}</div>
+      <div style="margin-top:10px"><button class="btn" type="button" data-copy-report="${idx}">📋 Copiar este reporte</button></div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-copy-report]").forEach(b=>{
+    b.addEventListener("click", ()=>copyText(reportText(S.reports[Number(b.dataset.copyReport)]), "📋 Reporte copiado"));
+  });
+}
+
+/* ================= EVENTS ================= */
+document.addEventListener("change", e=>{
+  const cb = e.target.closest("input[type=checkbox][data-group]");
+  if(cb){ S[cb.dataset.group][cb.dataset.id] = cb.checked; save();
+    if(cb.dataset.group==="buy") renderBuy();
+    if(cb.dataset.group==="steps"){ renderProcs(); progress(); }
+    return; }
+});
+$("#kmInput").addEventListener("input", e=>{
+  S.km = e.target.value; save(); renderDue(); renderNext();
+});
+document.querySelectorAll("[data-go]").forEach(ch=>{
+  ch.addEventListener("click", ()=>document.getElementById(ch.dataset.go).scrollIntoView({behavior:"smooth"}));
+});
+$("#btnSave").addEventListener("click", saveRecord);
+$("#btnSaveTop").addEventListener("click", saveRecord);
+$("#btnReset").addEventListener("click", ()=>{
+  S.steps = {}; save(); renderProcs(); progress();
+  toast("Marcas de trabajo borradas (el historial se conserva)");
+});
+$("#btnReport").addEventListener("click", saveReport);
+$("#btnCopyReport").addEventListener("click", ()=>{ if(lastReportText) copyText(lastReportText, "📋 Reporte copiado"); });
+
+/* ================= INIT ================= */
+if(S.km) $("#kmInput").value = S.km;
+renderBuy(); renderTools(); renderProcs(); renderInsp(); renderSpecs();
+renderRepChecks(); renderDue(); renderNext(); renderRecords(); progress();
+</script>
+</body>
+</html>
